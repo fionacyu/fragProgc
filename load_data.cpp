@@ -3,6 +3,7 @@
 #include<sstream>
 #include<iostream>
 #include<Eigen/Dense>
+#include<map>
 #include "load_data.h"
 #include "input.h"
 #include "mgraph.h"
@@ -95,4 +96,10 @@ int get_valence(std::string elem)
         exit(1);
     }
     return val;
+}
+
+std::map<std::string, aType> parameter_definition()
+{
+    std::string prmPath;
+    prmPath = "/Users/u7430616/scripts/fragProgC/UFF.prm";
 }

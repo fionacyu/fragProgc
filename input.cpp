@@ -82,3 +82,93 @@ input_f process_input(std::string inputfile)
     input_obj = get_inputs(input_contents);
 return input_obj;
 }
+
+void aType::set_r1(double &radius)
+{
+    r1 = radius;
+}
+
+void aType::set_theta0(double &theta)
+{
+    theta0 = theta;
+}
+
+void aType::set_x1(double &x)
+{
+    x1 = x;
+}
+
+void aType::set_D1(double &D)
+{
+    D1 = D;
+}
+
+void aType::set_zeta(double &z)
+{
+    zeta = z;
+}
+
+void aType::set_Z1(double &Z)
+{
+    Z1 = Z;
+}
+
+void aType::set_Vi(double &V)
+{
+    Vi = V;
+}
+
+void aType::set_Uj(double &U)
+{
+    Uj = U;
+}
+
+void aType::set_Xi(double &chi)
+{
+    Xi = chi;
+}
+
+double aType::get_r1()
+{
+    return r1;
+}
+
+double aType::get_theta0()
+{
+    return theta0;
+}
+
+double aType::get_x1()
+{
+    return x1;
+}
+
+double aType::get_D1()
+{
+    return D1;
+}
+
+double aType::get_zeta()
+{
+    return zeta;
+}
+
+double aType::get_Z1()
+{
+    return Z1;
+}
+
+double aType::get_Vi()
+{
+    return Vi;
+}
+
+double aType::get_Uj()
+{
+    return Uj;
+}
+
+double aType::get_Xi()
+{
+    return Xi;
+}
