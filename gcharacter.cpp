@@ -301,3 +301,38 @@ void check_hybrid(mgraph &graph) // check for hybridisation of oxygen, sulfur an
         }
     }
 }
+
+std::vector<std::vector<std::array<int,2>>> conjugate_region(mgraph &graph)
+{
+    std::vector<std::vector<std::array<int,2>>> conjugated_edges;
+    std::vector<std::array<int,2>> edge_vec;
+    edge_vec = graph.get_edges();
+    std::vector<std::array<int,2>> unsat_edges;
+
+    std::cout << "unsaturated edges" << std::endl;
+    for (int i = 0; i < edge_vec.size(); i++)
+    {
+        std::array<int,2> egraph;
+        egraph = edge_vec[i];
+        node node1, node2;
+        int node1_label, node2_label;
+        node1_label = egraph[0];
+        node2_label = egraph[1];
+        node1 = graph.nodes(node1_label);
+        node2 = graph.nodes(node2_label);
+        int cn1, cn2; // coordination number of node1 and node2
+
+        cn1 = node1.get_coordno();
+        cn2 = node2.get_coordno();
+
+        if (cn1 <= 3 && cn1 > 1 && cn2 <= 3 && cn2 > 1)
+        {
+            unsat_edges.push_back(egraph);
+            std::cout << node1_label << " " << node2_label << std::endl;
+        }
+        
+        mgraph cgraph;
+        
+    }
+    return conjugated_edges;
+}

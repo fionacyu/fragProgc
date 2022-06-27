@@ -79,6 +79,8 @@ class mgraph // molecular graph
     node nodes(int &nlabel);
     edge edges(std::array<int,2> &elabel);
     std::vector<int> neighbors(int &nodelabel);
+    std::vector<int> _plain_bfs(int &node_label);
+    std::vector<std::vector<int>> connected_components();
 
 };
 

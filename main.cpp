@@ -33,9 +33,24 @@ int main(int argc, char** argv){
     graph_edges(graph, edMat);
     check_hybrid(graph);
     
-    
-    for (int i = 0; i < graph.get_nodes().size(); i++)
-    /*{
+    std::vector<std::vector<std::array<int,2>>> conjugated_edges;
+    conjugated_edges = conjugate_region(graph);
+
+    std::vector<std::vector<int>> cc;
+    cc = graph.connected_components();
+    for (int i = 0; i < cc.size(); i++)
+    {
+        std::vector<int> _cc;
+        _cc = cc[i];
+        std::cout << "component" << i << std::endl;
+        for (int j = 0; j < _cc.size(); j++)
+        {
+            std::cout << "\t" << _cc[j] << std::endl;
+        }
+    }
+
+    /*for (int i = 0; i < graph.get_nodes().size(); i++)
+    {
         int nodelabel = graph.get_nodes()[i];
         std::cout << "node label: " << nodelabel << std::endl;
         std::cout << "\t" << "element: " << graph.nodes(nodelabel).get_element() << std::endl;

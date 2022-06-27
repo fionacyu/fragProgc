@@ -163,3 +163,60 @@ std::vector<int> mgraph::neighbors(int &nodelabel)
     }
     return neighVec;
 }
+
+std::vector<int> mgraph::_plain_bfs(int &node_label)
+{
+    // std::map<int, std::vector<int>> graphmap;
+    // std::vector<int> nodes_vec;
+    // nodes_vec = get_nodes();
+    // for (int i = 0; i < nodes_vec.size(); i++)
+    // {
+    //     std::vector<int> nneigh;
+    //     nneigh = neighbors(node_label);
+    //     graphmap.insert(std::pair<int, std::vector<int>>(node_label, nneigh));
+    // }
+
+    std::vector<int> seen;
+    std::vector<int> nextlevel;
+    nextlevel.push_back(node_label);
+    while (nextlevel.size() > 0)
+    {
+        std::vector<int> thislevel;
+        thislevel = nextlevel;
+        nextlevel.clear();
+        for (int j = 0; j < thislevel.size(); j++)
+        {
+            int v;
+            v = thislevel[j];
+            if (std::find(seen.begin(), seen.end(), v) == seen.end())
+            {
+                seen.push_back(v);
+                std::vector<int> vneigh;
+                vneigh = neighbors(v);
+                nextlevel.insert(nextlevel.end(), vneigh.begin(), vneigh.end());
+            }
+        }
+    }
+    return seen;
+
+}
+
+std::vector<std::vector<int>> mgraph::connected_components()
+{
+    std::vector<int> seen;
+    std::vector<int> nodes_vec;
+    nodes_vec = get_nodes();
+    std::vector<std::vector<int>> cc;
+    for (int i = 0; i< nodes_vec.size(); i++)
+    {
+        int node_label = nodes_vec[i];
+        if (std::find(seen.begin(), seen.end(), node_label) == seen.end()) // node_label not in seen
+        {
+            std::vector<int> bfs_comp;
+            bfs_comp = _plain_bfs(node_label);
+            seen.insert(seen.end(), bfs_comp.begin(), bfs_comp.end());
+            cc.push_back(bfs_comp);
+        }
+    }
+    return cc;
+}
