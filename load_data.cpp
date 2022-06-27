@@ -99,7 +99,71 @@ int get_valence(std::string elem)
 }
 
 std::map<std::string, aType> parameter_definition()
+// void parameter_definition()
 {
     std::string prmPath;
     prmPath = "/Users/u7430616/scripts/fragProgC/UFF.prm";
+    // UFF.prm file is taken from open babel 
+
+    std::string prm_contents;
+    std::string prm_string;
+    std::regex number_pattern("[[:digit:]]");
+    std::regex element_pattern("[A-Z]");
+    prm_contents = readFile(prmPath);
+    std::stringstream prmstream(prm_contents);
+
+    int prm_count = 0;
+    std::vector<double>prm_vec;
+
+    std::map<std::string, aType> prm_map;
+    std::string element;
+    while (prmstream >> prm_string) 
+    {
+        
+        if (regex_search(prm_string, element_pattern))
+        {
+            
+            element = prm_string;//[prm_string.length() - 1];
+            // std::cout << "element " << element << std::endl;
+            prm_string = regex_replace(prm_string, element_pattern, "");
+        }
+
+        else
+        {
+            if (regex_search(prm_string, number_pattern))
+            {
+                // std::cout << "number " << prm_string << std::endl;
+                // std::cout << "number"
+                prm_count += 1;
+                if (prm_count < 12)
+                {
+                    prm_vec.push_back(stod(prm_string));
+                    if (prm_vec.size() == 11)
+                    {
+                        aType atomtype;
+                        atomtype.set_r1(prm_vec[0]);
+                        atomtype.set_theta0(prm_vec[1]);
+                        atomtype.set_x1(prm_vec[2]);
+                        atomtype.set_D1(prm_vec[3]);
+                        atomtype.set_zeta(prm_vec[4]);
+                        atomtype.set_Z1(prm_vec[5]);
+                        atomtype.set_Vi(prm_vec[6]);
+                        atomtype.set_Uj(prm_vec[7]);
+                        atomtype.set_Xi(prm_vec[8]);
+
+                        // std::cout << element << std::endl;
+                        // std::cout << "\t" << prm_vec[0] << " " << prm_vec[1] << " " << prm_vec[2] << " " << prm_vec[3] << " " << prm_vec[4] << " " << prm_vec[5] << " " << prm_vec[6] << " " << prm_vec[7] << " " << prm_vec[8] << std::endl;
+                        prm_map.insert(std::pair<std::string, aType>(element, atomtype));
+                        prm_vec.clear();
+                        prm_count = 0;
+
+                    }
+                }
+            }
+        }
+
+        
+    }
+    return prm_map;
+
 }

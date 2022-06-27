@@ -52,5 +52,23 @@ int main(int argc, char** argv){
         std::cout << "\t" << "BL: " << egraph.get_bl() << std::endl;
     }*/
 
+    std::map<std::string, aType> prm_map;
+    prm_map = parameter_definition();
+    /*for (auto iter = prm_map.begin(); iter != prm_map.end(); iter++)
+    {
+        aType atomtype;
+        atomtype = iter->second;
+        std::cout << iter->first << " " << std::endl;
+        std::cout << "\t" << "r1: " << atomtype.get_r1() << std::endl;
+        std::cout << "\t" << "theta0: " << atomtype.get_theta0() << std::endl;
+        std::cout << "\t" << "x1: " << atomtype.get_x1() << std::endl;
+        std::cout << "\t" << "D1: " << atomtype.get_D1() << std::endl;
+        std::cout << "\t" << "zeta: " << atomtype.get_zeta() << std::endl;
+        std::cout << "\t" << "Z1: " << atomtype.get_Z1() << std::endl;
+        std::cout << "\t" << "Vi: " << atomtype.get_Vi() << std::endl;
+        std::cout << "\t" << "Uj: " << atomtype.get_Uj() << std::endl;
+        std::cout << "\t" << "Xi: " << atomtype.get_Xi() << std::endl;
+    }*/
+    
     return 0;
 }
