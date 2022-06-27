@@ -30,6 +30,11 @@ void node::set_at(std::string &atomtype)
     at = atomtype;
 }
 
+void node::set_pi(int &piElec)
+{
+    pi = piElec;
+}
+
 std::string node::get_element()
 {
     return element;
@@ -53,6 +58,11 @@ std::vector<double> node::get_box()
 std::string node::get_at()
 {
     return at;
+}
+
+int node::get_pi()
+{
+    return pi;
 }
 
 // edge functions

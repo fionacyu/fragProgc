@@ -20,6 +20,9 @@ int main(int argc, char** argv){
 
     process_files(input, argc, argv);
 
+    std::map<std::string, aType> prm_map;
+    prm_map = parameter_definition();
+
     mgraph graph;
     Eigen::MatrixXd xyzMat;
     Eigen::MatrixXd edMat;
@@ -28,9 +31,11 @@ int main(int argc, char** argv){
     edMat = edm(xyzMat);
     // std::cout << edMat << std::endl;
     graph_edges(graph, edMat);
+    check_hybrid(graph);
     
-    /*for (int i = 0; i < graph.get_nodes().size(); i++)
-    {
+    
+    for (int i = 0; i < graph.get_nodes().size(); i++)
+    /*{
         int nodelabel = graph.get_nodes()[i];
         std::cout << "node label: " << nodelabel << std::endl;
         std::cout << "\t" << "element: " << graph.nodes(nodelabel).get_element() << std::endl;
@@ -52,8 +57,6 @@ int main(int argc, char** argv){
         std::cout << "\t" << "BL: " << egraph.get_bl() << std::endl;
     }*/
 
-    std::map<std::string, aType> prm_map;
-    prm_map = parameter_definition();
     /*for (auto iter = prm_map.begin(); iter != prm_map.end(); iter++)
     {
         aType atomtype;

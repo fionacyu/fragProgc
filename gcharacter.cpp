@@ -253,7 +253,51 @@ void graph_edges(mgraph &graph, Eigen::MatrixXd &edm)
             graph.update_node(i, ngraph);
         }
         }
+}
 
-        
-    
+void check_hybrid(mgraph &graph) // check for hybridisation of oxygen, sulfur and nitrogen (cases like furan, pyrrole and thiophene where the coordination number of the heteroatom is initially determined to be 4)
+{
+    std::vector<int> nos_nodes;
+    std::vector<int> node_vec;
+    node_vec = graph.get_nodes();
+
+    for (int i = 0; i < node_vec.size(); i++)
+    {
+        node ngraph;
+        ngraph = graph.nodes(i);
+        std::string element;
+        element = ngraph.get_element();
+        int coordno;
+        coordno = ngraph.get_coordno();
+
+        if ((element == "N" && coordno == 4) || element == "O" && coordno == 4|| element == "S" && coordno == 4)
+        {
+            std::cout << "node i: " << i << std::endl;
+            std::vector<int> neigh_vec;
+            neigh_vec = graph.neighbors(i);
+            std::vector<int> neigh_coordno;
+            for (int j = 0; j < neigh_vec.size(); j++)
+            {
+                int nneigh_label;
+                nneigh_label = neigh_vec[j];
+                int coordno;
+                node nneigh;
+                nneigh = graph.nodes(nneigh_label);
+                coordno = nneigh.get_coordno();
+                neigh_coordno.push_back(coordno);
+            }
+            int sp2neigh;
+            sp2neigh = std::count(neigh_coordno.begin(), neigh_coordno.end(), 3);
+
+            if (sp2neigh > 1)
+            {
+                int elecDom = 3;
+                std::string atomtype;
+                atomtype = element + "_2";
+                ngraph.set_coordno(elecDom);
+                ngraph.set_at(atomtype);
+                graph.update_node(i, ngraph);
+            }
+        }
+    }
 }

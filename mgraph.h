@@ -12,6 +12,7 @@ class node
     std::vector<double> box;
     std::vector<double> coord;
     std::string at;
+    int pi; // number of pi electrons contributing to conjugated system
 
     public:
     node() //defaults
@@ -20,6 +21,7 @@ class node
         coord = {0.0, 0.0, 0.0};
         box = {0.0, 0.0, 0.0};
         at = "at";
+        pi = 0;
     }
 
     void set_element(std::string &element);
@@ -27,6 +29,7 @@ class node
     void set_coordinates(std::vector<double> &coord);
     void set_box(std::vector<double> &box);
     void set_at(std::string &at);
+    void set_pi(int &pi);
 
     // getter functions
     std::string get_element();
@@ -34,6 +37,7 @@ class node
     std::vector<double> get_coordinates();
     std::vector<double> get_box();
     std::string get_at();
+    int get_pi();
 };
 
 class edge

@@ -167,3 +167,9 @@ std::map<std::string, aType> parameter_definition()
     return prm_map;
 
 }
+
+
+aType get_atomtype(std::map<std::string, aType> &prm_map, std::string &atom_label)
+{
+    return prm_map.find(atom_label)->second;
+}
