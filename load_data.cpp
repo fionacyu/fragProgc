@@ -24,6 +24,7 @@ void extract_coordinates(std::string coordPath, mgraph &graph, Eigen::MatrixXd &
     std::regex element_pattern("[[:alpha:]]{1,2}");
     std::regex int_pattern("^0$|^[1-9][0-9]*$");
     coord_contents = readFile(coordPath);
+    std::cout << coord_contents << std::endl;
 
     int nodecount = 0;
     int coord_count = 0; 
@@ -42,7 +43,8 @@ void extract_coordinates(std::string coordPath, mgraph &graph, Eigen::MatrixXd &
         if (regex_search(coord_string, element_pattern)) // element will be encountered first
         {
             std::string element;
-            element += coord_string[coord_string.length() - 1];
+            // element += coord_string[coord_string.length() - 1];
+            element = coord_string;
             coord_string = regex_replace(coord_string, element_pattern, "");
 
             node graphn;

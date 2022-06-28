@@ -6,6 +6,7 @@
 #include<string>
 #include<map>
 #include<algorithm>
+#include<set>
 #include<Eigen/Dense>
 
 Eigen::MatrixXd edm(Eigen::MatrixXd &xyzMat)
@@ -78,6 +79,7 @@ double get_bo(std::vector<std::string> &atompairs, double &dist)
     }
     else
     {
+        // std::cout << atom1 << " " << atom2 << std::endl;
         std::cout << "this program only handles the elements H, B, C, N, O, F, P, S, Cl, Br and I" << std::endl;
         exit(1);
     }
@@ -272,7 +274,7 @@ void check_hybrid(mgraph &graph) // check for hybridisation of oxygen, sulfur an
 
         if ((element == "N" && coordno == 4) || element == "O" && coordno == 4|| element == "S" && coordno == 4)
         {
-            std::cout << "node i: " << i << std::endl;
+            // std::cout << "node i: " << i << std::endl;
             std::vector<int> neigh_vec;
             neigh_vec = graph.neighbors(i);
             std::vector<int> neigh_coordno;
@@ -299,6 +301,48 @@ void check_hybrid(mgraph &graph) // check for hybridisation of oxygen, sulfur an
                 graph.update_node(i, ngraph);
             }
         }
+
+        if (element == "N" && coordno == 4) // cases like formamide
+        {
+            std::vector<int> neigh_vec;
+            neigh_vec = graph.neighbors(i);
+            int status = 0;
+            for (int j = 0; j < neigh_vec.size(); j++)
+            {
+                int neigh_node;
+                neigh_node = neigh_vec[j];
+                std::vector<int> nneigh_vec;
+                nneigh_vec = graph.neighbors(neigh_node);
+                nneigh_vec.erase(std::remove(nneigh_vec.begin(), nneigh_vec.end(), i), nneigh_vec.end());
+                for (int k = 0; k < nneigh_vec.size(); k++)
+                {
+                    int pair1, pair2;
+                    pair1 = neigh_node;
+                    pair2 = nneigh_vec[k];
+
+                    int coord1, coord2;
+                    coord1 = graph.nodes(pair1).get_coordno();
+                    coord2 = graph.nodes(pair2).get_coordno();
+
+                    if (coord1 == 3 && coord2 == 3)
+                    {
+                        status = 1;
+                        break;
+                    }
+                }
+
+                if (status == 1)
+                {
+                    int elecDom = 3;
+                    std::string atomtype;
+                    atomtype = "N_2";
+                    ngraph.set_coordno(elecDom);
+                    ngraph.set_at(atomtype);
+                    graph.update_node(i, ngraph);
+                    break;
+                }
+            }
+        }
     }
 }
 
@@ -308,8 +352,9 @@ std::vector<std::vector<std::array<int,2>>> conjugate_region(mgraph &graph)
     std::vector<std::array<int,2>> edge_vec;
     edge_vec = graph.get_edges();
     std::vector<std::array<int,2>> unsat_edges;
+    std::set<int> unsat_nodes;
 
-    std::cout << "unsaturated edges" << std::endl;
+    // std::cout << "unsaturated edges" << std::endl;
     for (int i = 0; i < edge_vec.size(); i++)
     {
         std::array<int,2> egraph;
@@ -328,11 +373,113 @@ std::vector<std::vector<std::array<int,2>>> conjugate_region(mgraph &graph)
         if (cn1 <= 3 && cn1 > 1 && cn2 <= 3 && cn2 > 1)
         {
             unsat_edges.push_back(egraph);
-            std::cout << node1_label << " " << node2_label << std::endl;
+            unsat_nodes.insert(node1_label);
+            unsat_nodes.insert(node2_label);
+            // std::cout << node1_label << " " << node2_label << std::endl;
         }
-        
-        mgraph cgraph;
-        
+    }   
+
+    mgraph cgraph;
+    for (auto it = unsat_nodes.begin(); it != unsat_nodes.end(); it++)
+    {
+        node cnode;
+        int node_label = *it;
+        cgraph.add_node(node_label, cnode);
     }
+
+    for (int j =0; j < unsat_edges.size(); j++)
+    {
+        edge cedge;
+        cgraph.add_edge(unsat_edges[j], cedge);
+    }
+
+    std::vector<std::vector<int>> connected_comp;
+    connected_comp = cgraph.connected_components();
+
+    for (int k = 0; k < connected_comp.size(); k++)
+    {
+        std::vector<int> comp_nodes;
+        std::vector<int> cnodes;
+        comp_nodes = connected_comp[k];
+
+        if (comp_nodes.size() > 2)
+        {
+            std::vector<std::array<int,2>> comp_edges;
+            for (int d = 0; d < unsat_edges.size(); d++)
+            {
+                std::array<int,2> ue;
+                ue = unsat_edges[d];
+                int uen1, uen2; // nodes in the unsaturated edge
+                uen1 = ue[0];
+                uen2 = ue[1];
+                if ((std::find(comp_nodes.begin(), comp_nodes.end(), uen1) != comp_nodes.end()) && (std::find(comp_nodes.begin(), comp_nodes.end(), uen2) != comp_nodes.end()))
+                {
+                    comp_edges.push_back(ue);
+                    edge egraph;
+                    egraph = graph.edges(ue);
+                    bool conjstat = true;
+                    egraph.set_conjstatus(conjstat);
+                    graph.update_edge(ue, egraph);
+                }
+            }
+            conjugated_edges.push_back(comp_edges);
+        }
+        /*for (int v = 0; v < comp_nodes.size(); v++)
+        {
+            std::string element;
+            element = graph.nodes(comp_nodes[v]).get_element();
+            if (element == "C")
+            {
+                cnodes.push_back(comp_nodes[v]);
+            }
+        }
+
+        std::vector<int> prob_nodes; // problematic nodes e.g. case of allenes
+
+        for (int cn = 0; cn < cnodes.size(); cn++)
+        {
+            int carbon_node;
+            carbon_node = cnodes[cn];
+            std::vector<int> cneigh;
+            cneigh = cgraph.neighbors(carbon_node);
+            std::vector<double> bo_vec;
+
+            for (int n = 0; n < cneigh.size(); n++)
+            {
+                double bond_order;
+                int neighbor;
+                neighbor = cneigh[n];
+                std::array<int,2> elabel;
+                
+                if (neighbor < carbon_node)
+                {
+                    elabel[0] = neighbor;
+                    elabel[1] = carbon_node;
+                }
+
+                else
+                {
+                    elabel[0] = carbon_node;
+                    elabel[1] = neighbor;
+                }
+
+                bond_order = graph.edges(elabel).get_bo();
+                bo_vec.push_back(bond_order);
+
+                
+            }
+
+            dtcount = std::count(bo_vec.begin(), bo_vec.end(), 2.00);
+
+            if (dtcount >= 2)
+            {
+                prob_nodes.push_back(carbon_node);
+            }
+
+
+        }*/
+    }
+
+    
     return conjugated_edges;
 }

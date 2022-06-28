@@ -6,6 +6,7 @@
 #include<string>
 #include<map>
 #include<algorithm>
+#include<set>
 #include<Eigen/Dense>
 
 Eigen::MatrixXd edm(Eigen::MatrixXd &xyzMat);

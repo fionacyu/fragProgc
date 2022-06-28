@@ -36,7 +36,22 @@ int main(int argc, char** argv){
     std::vector<std::vector<std::array<int,2>>> conjugated_edges;
     conjugated_edges = conjugate_region(graph);
 
-    std::vector<std::vector<int>> cc;
+    /*for (int i = 0; i < conjugated_edges.size(); i++)
+    {   
+        std::cout << "conjugated edges " << i << std::endl;
+        std::vector<std::array<int,2>> _conjedges;
+        _conjedges = conjugated_edges[i];
+        for (int j = 0; j < _conjedges.size(); j++)
+        {
+            int node1;
+            int node2;
+            node1 = _conjedges[j][0];
+            node2 = _conjedges[j][1];
+            std::cout << node1 <<  " " << node2 << std::endl;
+        }
+    }*/
+
+    /*std::vector<std::vector<int>> cc;
     cc = graph.connected_components();
     for (int i = 0; i < cc.size(); i++)
     {
@@ -47,7 +62,7 @@ int main(int argc, char** argv){
         {
             std::cout << "\t" << _cc[j] << std::endl;
         }
-    }
+    }*/
 
     /*for (int i = 0; i < graph.get_nodes().size(); i++)
     {
@@ -70,6 +85,7 @@ int main(int argc, char** argv){
         egraph = graph.edges(elabel);
         std::cout << "\t" << "BO: " << egraph.get_bo() << std::endl;
         std::cout << "\t" << "BL: " << egraph.get_bl() << std::endl;
+        std::cout << "\t" << "conj status: " << egraph.get_conjstatus() << std::endl;
     }*/
 
     /*for (auto iter = prm_map.begin(); iter != prm_map.end(); iter++)

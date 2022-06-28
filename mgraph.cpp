@@ -201,7 +201,7 @@ std::vector<int> mgraph::_plain_bfs(int &node_label)
 
 }
 
-std::vector<std::vector<int>> mgraph::connected_components()
+std::vector<std::vector<int>> mgraph::connected_components() // algorithm the same as that in networkx python
 {
     std::vector<int> seen;
     std::vector<int> nodes_vec;
